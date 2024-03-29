@@ -7,12 +7,10 @@ import { JwtService } from '@nestjs/jwt';
 
 import { UserService } from 'src/users/user.service';
 import { SignInDTO } from './dtos/sign-in.dto';
-import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private configService: ConfigService,
     private userService: UserService,
     private jwtService: JwtService,
   ) {}
@@ -36,5 +34,14 @@ export class AuthService {
     return {
       access_token: await this.jwtService.signAsync(payload),
     };
+  }
+
+  async verifyAccessToken(token: string): Promise<object | null> {
+    try {
+      const payload = await this.jwtService.verifyAsync(token);
+      return payload;
+    } catch (error) {
+      return null;
+    }
   }
 }

@@ -1,0 +1,8 @@
+.articles-list {
+  margin-top: 16px;
+  list-style: none;
+}
+
+.articles-list__item {
+  margin-bottom: 16px;
+}

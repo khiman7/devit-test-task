@@ -13,7 +13,7 @@ import { STORAGE_KEYS } from '../constants';
 export interface IAuthContext {
   isAuthenticated: boolean;
   username: string | null;
-  login(token: string): void;
+  login(token: string): Promise<void>;
   logout(): void;
 }
 

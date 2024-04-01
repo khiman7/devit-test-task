@@ -17,3 +17,9 @@ export interface SignInDTO {
   username: string;
   password: string;
 }
+
+export interface FetchArticlesQueryParams {
+  search?: string;
+  offset?: number;
+  limit?: number;
+}

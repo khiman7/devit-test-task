@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { Article, UpdateArticleDTO } from '../types';
+import { Article, FetchArticlesQueryParams, UpdateArticleDTO } from '../types';
 import {
   deleteArticleById,
   fetchArticles,
@@ -8,11 +8,16 @@ import {
 } from '../services/articles.service';
 import { QUERY_KEYS } from '../constants';
 
-export default function useArticles() {
+export default function useArticles(
+  queryParams: FetchArticlesQueryParams = {}
+) {
   const queryClient = useQueryClient();
-  const { data, isSuccess, isLoading, isError, error } = useQuery<Article[]>({
+  const { data, isSuccess, isLoading, isError, error, refetch } = useQuery<{
+    articles: Article[];
+    count: number;
+  }>({
     queryKey: [QUERY_KEYS.ARTICLES],
-    queryFn: fetchArticles,
+    queryFn: () => fetchArticles(queryParams),
   });
 
   const updateMutation = useMutation({
@@ -31,7 +36,8 @@ export default function useArticles() {
   });
 
   return {
-    articles: data,
+    articles: data?.articles,
+    count: data?.count,
     isSuccess,
     isLoading,
     isError,
@@ -42,5 +48,6 @@ export default function useArticles() {
         dto,
       }),
     deleteArticle: (id: Article['_id']) => deleteMutation.mutate({ id }),
+    refetch,
   };
 }

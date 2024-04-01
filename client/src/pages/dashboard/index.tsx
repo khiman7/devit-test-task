@@ -1,16 +1,25 @@
-import { useState } from 'react';
-import { Box, Button, Card, Grid, IconButton, Typography } from '@mui/joy';
+import { useEffect, useState } from 'react';
+import { Box, Button, Card, IconButton, Typography } from '@mui/joy';
 import { Delete, Edit } from '@mui/icons-material';
 
 import useArticles from '../../hooks/useArticles.hook';
 import EditArticleModal from '../../components/EditArticleModal';
 import { Article, UpdateArticleDTO } from '../../types';
+import Pagination from '../../components/Pagination';
+import { ARTICLES_PAGE_SIZE } from '../feed';
 
 export default function Dashboard() {
-  const { articles, isSuccess, isLoading, updateArticle, deleteArticle } =
-    useArticles();
+  const [currentPage, setCurrentPage] = useState(1);
+  const { articles, count, isSuccess, updateArticle, deleteArticle, refetch } =
+    useArticles({
+      offset: (currentPage - 1) * ARTICLES_PAGE_SIZE,
+    });
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
   const [articleToEdit, setArticleToEdit] = useState<Article>();
+
+  useEffect(() => {
+    refetch();
+  }, [refetch, currentPage]);
 
   return (
     <>
@@ -63,6 +72,17 @@ export default function Dashboard() {
             </Box>
           ))}
       </Box>
+      {count ? (
+        <Box sx={{ display: 'flex', flex: 1, justifyContent: 'center' }}>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={Math.ceil(count / ARTICLES_PAGE_SIZE)}
+            onPageChange={(page) => setCurrentPage(page)}
+          />
+        </Box>
+      ) : (
+        <Typography level="body-md">No results</Typography>
+      )}
     </>
   );
 }

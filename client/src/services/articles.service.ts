@@ -1,9 +1,16 @@
 import axios from '../axios';
 import { API_ENDPOINTS } from '../constants';
-import { Article, UpdateArticleDTO } from '../types';
+import { Article, FetchArticlesQueryParams, UpdateArticleDTO } from '../types';
 
-export async function fetchArticles(): Promise<Article[]> {
-  const { data } = await axios.get<Article[]>(API_ENDPOINTS.ARTICLES);
+export async function fetchArticles(
+  params: FetchArticlesQueryParams
+): Promise<{ articles: Article[]; count: number }> {
+  const { data } = await axios.get<{ articles: Article[]; count: number }>(
+    API_ENDPOINTS.ARTICLES,
+    {
+      params,
+    }
+  );
   return data;
 }
 

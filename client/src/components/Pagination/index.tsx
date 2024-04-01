@@ -17,7 +17,7 @@ export default function Pagination({
     }
   };
 
-  const renderPageButtons = () => {
+  function renderPageButtons() {
     const buttons = [];
     for (let i = 1; i <= totalPages; i += 1) {
       buttons.push(
@@ -31,7 +31,7 @@ export default function Pagination({
       );
     }
     return buttons;
-  };
+  }
 
   return (
     <Box sx={{ textAlign: 'center', my: 2 }}>

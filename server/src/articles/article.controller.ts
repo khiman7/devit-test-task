@@ -1,12 +1,12 @@
 import {
   Controller,
   Get,
-  Post,
   Body,
   Param,
   Patch,
   Delete,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 
 import { Article } from './article.entity';
@@ -19,8 +19,12 @@ export class ArticleController {
   constructor(private readonly articleService: ArticleService) {}
 
   @Get()
-  async findAll(): Promise<Article[]> {
-    return this.articleService.findAll();
+  async findAll(
+    @Query('search') search?: string,
+    @Query('offset') offset = 0,
+    @Query('limit') limit = 10,
+  ): Promise<{ articles: Article[]; count: number }> {
+    return this.articleService.findAll(offset, limit, search);
   }
 
   @Get(':id')
